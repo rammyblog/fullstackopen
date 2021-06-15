@@ -27,12 +27,26 @@ const App = () => {
   const genRandomNumber = () => {
     return setSelected(Math.floor(Math.random() * anecdotes.length));
   };
+  console.log(
+    Object.keys(anecdotesVotes).reduce((a, b) =>
+      anecdotesVotes[a] > anecdotesVotes[b] ? a : b
+    )
+  );
 
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <button onClick={handleSetVotes}>Vote</button>{" "}
       <button onClick={genRandomNumber}>next anecdote</button>
+      <p>has {anecdotesVotes[selected] ? anecdotesVotes[selected] : 0} votes</p>
+      <h1>Anecdote with most votes</h1>
+      {Object.entries(anecdotesVotes).length > 0 &&
+        anecdotes[
+          Object.keys(anecdotesVotes).reduce((a, b) =>
+            anecdotesVotes[a] > anecdotesVotes[b] ? a : b
+          )
+        ]}
     </>
   );
 };
