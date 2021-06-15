@@ -12,15 +12,27 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [anecdotesVotes, setAnecdotesVotes] = useState({});
 
+  const handleSetVotes = () => {
+    const copyAnte = { ...anecdotesVotes };
+    if (!copyAnte[selected]) {
+      copyAnte[selected] = 1;
+    } else {
+      copyAnte[selected] += 1;
+    }
+
+    setAnecdotesVotes(copyAnte);
+  };
   const genRandomNumber = () => {
     return setSelected(Math.floor(Math.random() * anecdotes.length));
   };
 
   return (
     <>
-      <button onClick={genRandomNumber}>Generate genRandomNumber</button>
       <div>{anecdotes[selected]}</div>
+      <button onClick={handleSetVotes}>Vote</button>{" "}
+      <button onClick={genRandomNumber}>next anecdote</button>
     </>
   );
 };
