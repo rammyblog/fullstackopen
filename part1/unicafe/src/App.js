@@ -6,9 +6,11 @@ const Button = ({ handleClick, text }) => {
 
 const Statistics = ({ title, statistic }) => {
   return (
-    <p>
-      {title} {statistic}
-    </p>
+    <tr>
+      <td>
+        {title} {statistic}
+      </td>
+    </tr>
   );
 };
 
@@ -30,18 +32,24 @@ const App = () => {
       <br />
       {good || neutral || bad ? (
         <>
-          <Statistics title="good" statistic={good} />
-          <Statistics title="neutral" statistic={neutral} />
-          <Statistics title="bad" statistic={bad} />
-          <Statistics title="all" statistic={good + neutral + bad} />
-          <Statistics
-            title="average"
-            statistic={(good - bad) / (good + bad + neutral)}
-          />
-          <Statistics
-            title="positive"
-            statistic={`${(good / (good + neutral + bad)) * 100}%`}
-          />
+          <table>
+            <tbody>
+              <Statistics title="good" statistic={good} />
+              <Statistics title="neutral" statistic={neutral} />
+              <Statistics title="bad" statistic={bad} />
+              <Statistics title="all" statistic={good + neutral + bad} />
+              <Statistics
+                title="average"
+                statistic={((good - bad) / (good + bad + neutral)).toFixed(1)}
+              />
+              <Statistics
+                title="positive"
+                statistic={`${
+                  (good / (good + neutral + bad) * 100).toFixed(1)
+                }%`}
+              />
+            </tbody>
+          </table>
         </>
       ) : (
         "No feedback given"
