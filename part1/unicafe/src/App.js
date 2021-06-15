@@ -4,7 +4,9 @@ const Button = ({ handleClick, text }) => {
   return <button onClick={handleClick}>{text}</button>;
 };
 
-
+  const Statistics = (props) => {
+    return()
+  }
 
 const App = () => {
   // save clicks of each button to its own state
