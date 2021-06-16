@@ -10,7 +10,10 @@ const App = () => {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    const duplicate = persons.find((obj) => obj.name === newName);
+    duplicate
+      ? alert(`${newName} is already added to phonebook`)
+      : setPersons(persons.concat({ name: newName }));
   };
   return (
     <div>
