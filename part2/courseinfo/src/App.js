@@ -16,12 +16,13 @@ const Content = (props) => {
 
 const Total = (props) => {
   return (
-    <p>
-      Number of exercises
+    <b>
+      total of
       {props.parts[0].exercises +
         props.parts[1].exercises +
         props.parts[2].exercises}
-    </p>
+      exercises 
+    </b>
   );
 };
 
