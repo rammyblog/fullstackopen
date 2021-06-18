@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 
-const DisplayCountries = ({ countries }) => {
+const DisplayCountries = ({ countries, handleSetCountries }) => {
   if (countries.length >= 10) {
     return <p>Too many matches, specify another filter</p>;
   }
@@ -11,7 +11,7 @@ const DisplayCountries = ({ countries }) => {
         {countries.map((country) => (
           <>
             <p key={country.numericCode}>{country.name}</p>{" "}
-            <button>show</button>
+            <button onClick={() => handleSetCountries(country)}>show</button>
           </>
         ))}
       </>
@@ -46,6 +46,7 @@ const App = () => {
   const [countries, setCountries] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
+  console.log(filteredCountries);
 
   const fetchCountriesData = async () => {
     try {
@@ -74,12 +75,19 @@ const App = () => {
     fetchCountriesData();
   }, []);
 
+  const handleSetCountries = (country) => {
+    setFilteredCountries([country]);
+  };
+
   return (
     <>
       find countries:{" "}
       <input name="filter" value={searchQuery} onChange={handleFilterChange} />
       {filteredCountries.length > 0 ? (
-        <DisplayCountries countries={filteredCountries} />
+        <DisplayCountries
+          countries={filteredCountries}
+          handleSetCountries={handleSetCountries}
+        />
       ) : null}
     </>
   );
