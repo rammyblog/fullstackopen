@@ -42,7 +42,22 @@ const App = () => {
     e.preventDefault();
     const duplicate = persons.find((obj) => obj.name === newName);
     if (duplicate) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added, replace the old number with a new one?`
+        )
+      ) {
+        const returnedPerson = await PersonService.editPerson({
+          name: newName,
+          number: newNumber,
+          id: duplicate.id,
+        });
+        setPersons(
+          persons.map((person) =>
+            person.id !== duplicate.id ? person : returnedPerson
+          )
+        );
+      }
     } else {
       const newPerson = await PersonService.createPerson({
         name: newName,

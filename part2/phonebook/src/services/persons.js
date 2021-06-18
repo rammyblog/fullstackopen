@@ -27,5 +27,16 @@ const deletePerson = async (id) => {
     throw error;
   }
 };
+const editPerson = async (personObj) => {
+  try {
+    const res = await axios.put(
+      `http://localhost:3001/persons/${personObj.id}`,
+      personObj
+    );
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
-export default { getPersons, createPerson, deletePerson };
+export default { getPersons, createPerson, deletePerson, editPerson };
