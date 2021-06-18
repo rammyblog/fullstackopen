@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import Notification from "./components/Notification";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Person from "./components/Person";
@@ -12,6 +12,10 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [notificationObj, setNotificationObj] = useState({
+    message: "",
+    status: "",
+  });
 
   const getPersons = async () => {
     setPersons(await PersonService.getPersons());
@@ -20,6 +24,18 @@ const App = () => {
     getPersons();
   }, []);
 
+  const handleNotifications = (message, status) => {
+    setNotificationObj({
+      message,
+      status,
+    });
+    setTimeout(() => {
+      setNotificationObj({
+        message: "",
+        status: "",
+      });
+    }, 5000);
+  };
   const handleNewName = (e) => {
     setNewName(e.target.value);
   };
@@ -57,6 +73,9 @@ const App = () => {
             person.id !== duplicate.id ? person : returnedPerson
           )
         );
+        handleNotifications(`'${newName}' edited`, "success");
+        setNewName("");
+        setNewNumber("");
       }
     } else {
       const newPerson = await PersonService.createPerson({
@@ -64,16 +83,27 @@ const App = () => {
         number: newNumber,
       });
       setPersons(persons.concat(newPerson));
+      setNewName("");
+      setNewNumber("");
+      handleNotifications(`${newName} has been added`, "success");
     }
   };
 
-  const handlePersonDelete = async (id) => {
-    await PersonService.deletePerson(id);
-    setPersons(persons.filter((person) => person.id !== id));
+  const handlePersonDelete = async (name, id) => {
+    try {
+      await PersonService.deletePerson(id);
+      setPersons(persons.filter((person) => person.id !== id));
+      handleNotifications(`'${name}' has removed from server`, "success");
+    } catch (error) {
+      handleNotifications(`'${name}' was already removed from server`, "error");
+    }
   };
   return (
     <div>
       <h2>Phonebook</h2>
+      {notificationObj.message && notificationObj.status ? (
+        <Notification {...notificationObj} />
+      ) : null}
       <Filter search={search} onChangeHandler={handleSearchChange} />
       <h3>Add a new</h3>
       <PersonForm

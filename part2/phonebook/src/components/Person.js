@@ -1,7 +1,7 @@
 const Person = ({ persons, handlePersonDelete }) => {
   const handleDeleteClick = ({ name, id }) => {
     if (window.confirm(`Do you really want to delete ${name}?`)) {
-      handlePersonDelete(id);
+      handlePersonDelete(name, id);
     }
   };
 
