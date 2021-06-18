@@ -19,4 +19,13 @@ const createPerson = async (personObj) => {
   }
 };
 
-export default { getPersons, createPerson };
+const deletePerson = async (id) => {
+  try {
+    const res = await axios.delete(`http://localhost:3001/persons/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default { getPersons, createPerson, deletePerson };

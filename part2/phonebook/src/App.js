@@ -51,6 +51,11 @@ const App = () => {
       setPersons(persons.concat(newPerson));
     }
   };
+
+  const handlePersonDelete = async (id) => {
+    await PersonService.deletePerson(id);
+    setPersons(persons.filter((person) => person.id !== id));
+  };
   return (
     <div>
       <h2>Phonebook</h2>
@@ -65,9 +70,12 @@ const App = () => {
       />
       <h2>Numbers</h2>
       {search ? (
-        <Person persons={personSearch} />
+        <Person
+          persons={personSearch}
+          handlePersonDelete={handlePersonDelete}
+        />
       ) : (
-        <Person persons={persons} />
+        <Person persons={persons} handlePersonDelete={handlePersonDelete} />
       )}
     </div>
   );
