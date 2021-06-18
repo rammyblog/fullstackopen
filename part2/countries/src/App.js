@@ -9,7 +9,10 @@ const DisplayCountries = ({ countries }) => {
     return (
       <>
         {countries.map((country) => (
-          <p key={country.numericCode}>{country.name}</p>
+          <>
+            <p key={country.numericCode}>{country.name}</p>{" "}
+            <button>show</button>
+          </>
         ))}
       </>
     );
