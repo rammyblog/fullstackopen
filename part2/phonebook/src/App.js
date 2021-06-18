@@ -3,6 +3,7 @@ import axios from "axios";
 import PersonForm from "./components/PersonForm";
 import Filter from "./components/Filter";
 import Person from "./components/Person";
+import PersonService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,21 +13,12 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
-  }, []);
-
-  const createNewPerson = async (personObj) => {
-    try {
-      const res = await axios.post("http://localhost:3001/persons", personObj);
-      setPersons(persons.concat(res.data));
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
+  const getPersons = async () => {
+    setPersons(await PersonService.getPersons());
   };
+  useEffect(() => {
+    getPersons();
+  }, []);
 
   const handleNewName = (e) => {
     setNewName(e.target.value);
@@ -46,13 +38,17 @@ const App = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const duplicate = persons.find((obj) => obj.name === newName);
     if (duplicate) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      createNewPerson({ name: newName, number: newNumber });
+      const newPerson = await PersonService.createPerson({
+        name: newName,
+        number: newNumber,
+      });
+      setPersons(persons.concat(newPerson));
     }
   };
   return (
