@@ -1,52 +1,12 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
-const DisplayCountries = ({ countries, handleSetCountries }) => {
-  if (countries.length >= 10) {
-    return <p>Too many matches, specify another filter</p>;
-  }
-  if (countries.length < 10 && countries.length !== 1) {
-    return (
-      <>
-        {countries.map((country) => (
-          <>
-            <p key={country.numericCode}>{country.name}</p>{" "}
-            <button onClick={() => handleSetCountries(country)}>show</button>
-          </>
-        ))}
-      </>
-    );
-  }
-
-  if (countries.length === 1) {
-    return (
-      <>
-        {countries.map((country) => (
-          <Fragment key={country.numericCode}>
-            <h1>{country.name}</h1>
-            <p>capital: {country.capital}</p>
-            <p>population: {country.population}</p>
-            <h2>languages</h2>
-            <ul>
-              {country.languages.map((language) => (
-                <Fragment key={language}>
-                  <li>{language.name}</li>
-                </Fragment>
-              ))}
-            </ul>
-            <img src={country.flag} alt={country.name} width="150" />
-          </Fragment>
-        ))}
-      </>
-    );
-  }
-};
+import DisplayCountries from "./components/DisplayCountries";
 
 const App = () => {
   const [countries, setCountries] = useState();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
-  console.log(filteredCountries);
+  const [weatherInfo, setWeatherInfo] = useState();
 
   const fetchCountriesData = async () => {
     try {
@@ -58,12 +18,26 @@ const App = () => {
     }
   };
 
+  const fetchWeatherInfo = async (capital) => {
+    try {
+      const res = await axios.get(
+        `http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_WEATHER_API_KEY}&query=${capital}`
+      );
+      setWeatherInfo(res.data);
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
   const filterCountries = () => {
-    setFilteredCountries(
-      countries.filter((country) =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    const countriesSearch = countries.filter((country) =>
+      country.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    if (countriesSearch.length === 1) {
+      fetchWeatherInfo(countriesSearch[0].capital);
+    }
+    setFilteredCountries(countriesSearch);
   };
 
   const handleFilterChange = (e) => {
@@ -76,6 +50,7 @@ const App = () => {
   }, []);
 
   const handleSetCountries = (country) => {
+    fetchWeatherInfo(country.capital);
     setFilteredCountries([country]);
   };
 
@@ -87,6 +62,7 @@ const App = () => {
         <DisplayCountries
           countries={filteredCountries}
           handleSetCountries={handleSetCountries}
+          weatherInfo={weatherInfo}
         />
       ) : null}
     </>
