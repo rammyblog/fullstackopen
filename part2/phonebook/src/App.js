@@ -1,48 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-const Filter = ({ search, onChangeHandler }) => {
-  return (
-    <>
-      Filter shown with <input value={search} onChange={onChangeHandler} />
-    </>
-  );
-};
-
-const PersonForm = ({
-  newName,
-  handleNewName,
-  newNumber,
-  handleNewNumber,
-  handleFormSubmit,
-}) => {
-  return (
-    <>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleNewName} />
-        </div>
-        <div>
-          number:
-          <input value={newNumber} onChange={handleNewNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-    </>
-  );
-};
-
-const Person = ({ persons }) => {
-  return persons.map((person) => (
-    <>
-      <p key={person.name}>
-        {person.name} {person.number}
-      </p>
-    </>
-  ));
-};
+import PersonForm from "./components/PersonForm";
+import Filter from "./components/Filter";
+import Person from "./components/Person";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -57,6 +17,16 @@ const App = () => {
       setPersons(response.data);
     });
   }, []);
+
+  const createNewPerson = async (personObj) => {
+    try {
+      const res = await axios.post("http://localhost:3001/persons", personObj);
+      setPersons(persons.concat(res.data));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
 
   const handleNewName = (e) => {
     setNewName(e.target.value);
@@ -79,9 +49,11 @@ const App = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const duplicate = persons.find((obj) => obj.name === newName);
-    duplicate
-      ? alert(`${newName} is already added to phonebook`)
-      : setPersons(persons.concat({ name: newName, number: newNumber }));
+    if (duplicate) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      createNewPerson({ name: newName, number: newNumber });
+    }
   };
   return (
     <div>
