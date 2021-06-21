@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASE_URL = "http://localhost:3001/persons";
+const BASE_URL = "api/persons";
 
 const getPersons = async () => {
   try {
@@ -12,16 +12,17 @@ const getPersons = async () => {
 
 const createPerson = async (personObj) => {
   try {
-    const res = await axios.post("http://localhost:3001/persons", personObj);
+    const res = await axios.post(BASE_URL, personObj);
     return res.data;
   } catch (error) {
+    // return error
     throw error;
   }
 };
 
 const deletePerson = async (id) => {
   try {
-    const res = await axios.delete(`http://localhost:3001/persons/${id}`);
+    const res = await axios.delete(`${BASE_URL}/${id}`);
     return res.data;
   } catch (error) {
     throw error;
@@ -29,10 +30,7 @@ const deletePerson = async (id) => {
 };
 const editPerson = async (personObj) => {
   try {
-    const res = await axios.put(
-      `http://localhost:3001/persons/${personObj.id}`,
-      personObj
-    );
+    const res = await axios.put(`${BASE_URL}/${personObj.id}`, personObj);
     return res.data;
   } catch (error) {
     throw error;
