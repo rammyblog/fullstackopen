@@ -47,7 +47,9 @@ const App = () => {
     setSearch(e.target.value);
     if (e.target.value) {
       setPersonSearch(
-        persons.filter((person) => person.name.toLowerCase().includes(search))
+        persons.filter((person) =>
+          person.name.toLowerCase().includes(search.toLowerCase())
+        )
       );
     } else {
       setPersonSearch([]);
