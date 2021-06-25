@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blog");
+const User = require("../models/user");
+
 const api = supertest(app);
 
 const initialBlogs = [
@@ -18,10 +20,21 @@ const initialBlogs = [
     likes: 5,
   },
 ];
+const initialUser = {
+  name: "Onasanya",
+  username: "rammyblog",
+  password: "rammyblog",
+};
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const blogObjects = initialBlogs.map((blog) => new Blog(blog));
+  await User.deleteMany({});
+  const { body } = await api.post("/api/users/").send(initialUser);
+
+  const blogObjects = initialBlogs.map((blog) => {
+    blog.user = body.id;
+    return new Blog(blog);
+  });
   const promiseArray = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArray);
 });
@@ -46,8 +59,11 @@ test("creation of a blog post is possible", async () => {
     url: "https://www.tunde.com/",
     likes: 7,
   };
+  const { body } = await api.post("/api/login/").send(initialUser);
+  const { token } = body;
   await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send(singleBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
@@ -63,8 +79,11 @@ test("Creation of blog post with 0 likes", async () => {
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
   };
+  const { body } = await api.post("/api/login/").send(initialUser);
+  const { token } = body;
   const res = await api
     .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
     .send(newPost)
     .expect(201)
     .expect("Content-Type", /application\/json/);
@@ -83,14 +102,15 @@ test("creation of a blog post without title and url will fail", async () => {
   await api.post("/api/blogs").send(singleBlog).expect(400);
 });
 
-afterAll(() => {
-  mongoose.connection.close();
-});
-
 test("Test deleting a single blog", async () => {
   const response = await api.get("/api/blogs");
+  const { body } = await api.post("/api/login/").send(initialUser);
+  const { token } = body;
   const { id } = response.body[0];
-  await api.delete(`/api/blogs/${id}/`).expect(204);
+  await api
+    .delete(`/api/blogs/${id}/`)
+    .set("Authorization", `Bearer ${token}`)
+    .expect(204);
   const blogAfter = await Blog.find({});
   expect(blogAfter.length).toBe(initialBlogs.length - 1);
 });
