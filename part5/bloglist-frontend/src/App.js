@@ -53,6 +53,19 @@ const App = () => {
     }
   };
 
+  const handleEditBlog = async (id) => {
+    try {
+      const blogsClone = [...blogs];
+      const oldBlog = blogsClone.find((obj) => obj.id === id);
+      oldBlog.likes += 1;
+      const blog = await blogService.edit(id, oldBlog);
+      setBlogs(blogsClone);
+      handleNotifications(`${blog.title} has been liked`, "success");
+    } catch (error) {
+      handleNotifications(error.message, "error");
+    }
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -94,6 +107,13 @@ const App = () => {
       <button type="submit">login</button>
     </form>
   );
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
 
   return (
     <div>
@@ -107,12 +127,23 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <p>{user.name} logged in</p>
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+          <Togglable
+            buttonLabel="create new blog"
+            hideBtnLabel="cancel"
+            ref={blogFormRef}
+          >
             <BlogForm handleAddToBlog={handleAddToBlog} />
           </Togglable>
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <div style={blogStyle} key={blog.id}>
+                <span>{blog.title}</span>
+                <Togglable buttonLabel="view" hideBtnLabel="hide">
+                  <Blog blog={blog} handleEditBlog={handleEditBlog} />
+                </Togglable>
+              </div>
+            ))}
         </div>
       )}
     </div>
