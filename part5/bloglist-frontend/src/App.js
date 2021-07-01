@@ -65,6 +65,17 @@ const App = () => {
       handleNotifications(error.message, "error");
     }
   };
+  const handleDeleteBlog = async ({ id, title }) => {
+    try {
+      const blogsClone = [...blogs];
+      await blogService.remove(id);
+      setBlogs(blogsClone.filter((obj) => obj.id !== id));
+      handleNotifications(`${title} has been removed`, "success");
+    } catch (error) {
+      console.log({ error });
+      handleNotifications(error.response.data.error, "error");
+    }
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -140,7 +151,11 @@ const App = () => {
               <div style={blogStyle} key={blog.id}>
                 <span>{blog.title}</span>
                 <Togglable buttonLabel="view" hideBtnLabel="hide">
-                  <Blog blog={blog} handleEditBlog={handleEditBlog} />
+                  <Blog
+                    blog={blog}
+                    handleEditBlog={handleEditBlog}
+                    handleDeleteBlog={handleDeleteBlog}
+                  />
                 </Togglable>
               </div>
             ))}
