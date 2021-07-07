@@ -1,4 +1,5 @@
 import React from "react";
+import Togglable from "./Togglable";
 const Blog = ({ blog, handleEditBlog, handleDeleteBlog }) => {
   const handleDeleteBlogConfirmation = () => {
     if (window.confirm(`remove blog ${blog.title} by ${blog.author}!`)) {
@@ -7,14 +8,32 @@ const Blog = ({ blog, handleEditBlog, handleDeleteBlog }) => {
   };
 
   return (
-    <div>
-      <p>{blog.url}</p>
-      <p>
-        likes {blog.likes}{" "}
-        <button onClick={() => handleEditBlog(blog.id)}>like</button>
-      </p>
-      <p>{blog.author}</p>
-      <button onClick={() => handleDeleteBlogConfirmation()}>Delete</button>
+    <div className="blog">
+      {blog.title}
+      <Togglable buttonLabel="view" hideBtnLabel="hide">
+        <div>
+          <p className="url">
+            {blog.url} <br />
+          </p>
+          <p className="likes">
+            Likes {blog.likes}
+            <button
+              className="likeButton"
+              onClick={() => handleEditBlog(blog.id)}
+            >
+              like
+            </button>{" "}
+            <br />{" "}
+          </p>
+          <p className="author">{blog.author}</p>
+          <button
+            className="likebtn"
+            onClick={() => handleDeleteBlogConfirmation()}
+          >
+            delete
+          </button>
+        </div>
+      </Togglable>
     </div>
   );
 };

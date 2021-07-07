@@ -149,14 +149,11 @@ const App = () => {
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
               <div style={blogStyle} key={blog.id}>
-                <span>{blog.title}</span>
-                <Togglable buttonLabel="view" hideBtnLabel="hide">
-                  <Blog
-                    blog={blog}
-                    handleEditBlog={handleEditBlog}
-                    handleDeleteBlog={handleDeleteBlog}
-                  />
-                </Togglable>
+                <Blog
+                  blog={blog}
+                  handleEditBlog={handleEditBlog}
+                  handleDeleteBlog={handleDeleteBlog}
+                />
               </div>
             ))}
         </div>
