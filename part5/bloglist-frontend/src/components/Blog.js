@@ -19,6 +19,7 @@ const Blog = ({ blog, handleEditBlog, handleDeleteBlog }) => {
             Likes {blog.likes}
             <button
               className="likeButton"
+              id='like'
               onClick={() => handleEditBlog(blog.id)}
             >
               like
@@ -27,8 +28,9 @@ const Blog = ({ blog, handleEditBlog, handleDeleteBlog }) => {
           </p>
           <p className="author">{blog.author}</p>
           <button
-            className="likebtn"
-            onClick={() => handleDeleteBlogConfirmation()}
+            className="deleteBtn"
+            id='delete'
+            onClick={() => handleDeleteBlogConfirmation(blog)}
           >
             delete
           </button>

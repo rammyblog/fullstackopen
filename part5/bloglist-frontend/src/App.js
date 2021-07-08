@@ -68,12 +68,13 @@ const App = () => {
   const handleDeleteBlog = async ({ id, title }) => {
     try {
       const blogsClone = [...blogs];
+      console.log(id, title);
       await blogService.remove(id);
       setBlogs(blogsClone.filter((obj) => obj.id !== id));
       handleNotifications(`${title} has been removed`, "success");
     } catch (error) {
       console.log({ error });
-      handleNotifications(error.response.data.error, "error");
+      handleNotifications(error.message, "error");
     }
   };
 
@@ -101,7 +102,7 @@ const App = () => {
         username
         <input
           type="text"
-          id='username'
+          id="username"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
@@ -111,14 +112,15 @@ const App = () => {
         password
         <input
           type="password"
-          id='password'
-
+          id="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit" id='login-btn'>login</button>
+      <button type="submit" id="login-btn">
+        login
+      </button>
     </form>
   );
   const blogStyle = {

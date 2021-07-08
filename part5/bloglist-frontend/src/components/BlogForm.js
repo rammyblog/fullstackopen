@@ -23,6 +23,7 @@ const BlogForm = ({ handleAddToBlog }) => {
             type="text"
             value={formDetails.title}
             name="title"
+            id="title"
             onChange={handleFormChange}
           />
         </div>
@@ -32,6 +33,7 @@ const BlogForm = ({ handleAddToBlog }) => {
             type="text"
             value={formDetails.author}
             name="author"
+            id="author"
             onChange={handleFormChange}
           />
         </div>
@@ -41,10 +43,11 @@ const BlogForm = ({ handleAddToBlog }) => {
             type="text"
             value={formDetails.url}
             name="url"
+            id="url"
             onChange={handleFormChange}
           />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" id='create-blog'>create</button>
       </form>
     </>
   );
