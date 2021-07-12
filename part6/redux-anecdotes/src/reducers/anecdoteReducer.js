@@ -29,6 +29,8 @@ const reducer = (state = initialState, action) => {
       return state.map((anecdote) =>
         anecdote.id === action.id ? changedAnecdote : anecdote
       );
+    case 'SUBMIT_ANECDOTE':
+      return state.concat([asObject(action.content)]);
     default:
       return state;
   }
