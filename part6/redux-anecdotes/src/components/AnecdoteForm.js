@@ -12,6 +12,8 @@ const AnecdoteForm = () => {
   };
   return (
     <>
+      <h2>create new</h2>
+
       <form onSubmit={handleAnecdoteSubmit}>
         <div>
           <input type="text" name="anecdote" />
