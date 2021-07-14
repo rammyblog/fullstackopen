@@ -10,24 +10,19 @@ const notificationReducer = (state = null, action) => {
 };
 
 export const setNotification = (notification, displayTime) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "NEW_NOTIFICATION",
+      notification,
+    });
 
-  return {
-    type: "NEW_NOTIFICATION",
-    notification,
+    setTimeout(() => {
+      dispatch({
+        type: "HIDE_NOTIFICATION",
+        notification: null,
+      });
+    }, displayTime * 1000);
   };
 };
 
-export const hideNotification = () => {
-  return {
-    type: "HIDE_NOTIFICATION",
-    notification: null,
-  };
-};
-
-// export const voteAnecdote = (id) => {
-//     return {
-//       type: "VOTE_ANECDOTE",
-//       id,
-//     };
-//   };
 export default notificationReducer;
