@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import {
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useHistory,
+} from "react-router-dom";
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -32,7 +38,7 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 );
 
-const SingleAnecdote = ({anecdote}) => (
+const SingleAnecdote = ({ anecdote }) => (
   <div>
     <h2>
       {anecdote.content} by {anecdote.author}
@@ -145,10 +151,16 @@ const App = () => {
   ]);
 
   const [notification, setNotification] = useState("");
+  const history = useHistory();
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    history.push("/");
+    setNotification(`${anecdote.content} created!`);
+    setTimeout(() => {
+      setNotification("");
+    }, 10000);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -168,11 +180,11 @@ const App = () => {
   const anecdote = match
     ? anecdotes.find((anecdote) => anecdote.id === match.params.id)
     : null;
-  console.log(anecdote);
 
   return (
     <div>
       <h1>Software anecdotes</h1>
+      {notification && <h3>{notification}</h3>}
       <Menu />
       <Switch>
         <Route path="/" exact>
