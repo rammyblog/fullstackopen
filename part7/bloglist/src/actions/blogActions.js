@@ -29,3 +29,18 @@ export const addBlog = (blog) => {
     }
   };
 };
+
+export const deleteBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      await blogService.remove(blog.id);
+      dispatch({
+        type: "DELETE_BLOG",
+        data: blog,
+      });
+      dispatch(showNotification(` ${blog.title} has been deleted`, "success"));
+    } catch (exception) {
+      dispatch(showNotification(`cannot delete blog ${blog.title}`, "error"));
+    }
+  };
+};

@@ -6,7 +6,7 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import { fetchBlogs, addBlog } from "./actions/blogActions";
+import { fetchBlogs, addBlog, deleteBlog } from "./actions/blogActions";
 import { showNotification } from "./reducers/notificationReducer";
 
 const App = () => {
@@ -48,17 +48,8 @@ const App = () => {
       // handleNotifications(error.message, "error");
     }
   };
-  const handleDeleteBlog = async ({ id, title }) => {
-    try {
-      // const blogsClone = [...blogs];
-      console.log(id, title);
-      await blogService.remove(id);
-      // setBlogs(blogsClone.filter((obj) => obj.id !== id));
-      // handleNotifications(`${title} has been removed`, "success");
-    } catch (error) {
-      console.log({ error });
-      // handleNotifications(error.message, "error");
-    }
+  const handleDeleteBlog = (blog) => {
+    dispatch(deleteBlog(blog));
   };
 
   const handleLogin = async (event) => {
