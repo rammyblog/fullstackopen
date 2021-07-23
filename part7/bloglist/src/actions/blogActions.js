@@ -39,8 +39,26 @@ export const deleteBlog = (blog) => {
         data: blog,
       });
       dispatch(showNotification(` ${blog.title} has been deleted`, "success"));
-    } catch (exception) {
+    } catch (error) {
       dispatch(showNotification(`cannot delete blog ${blog.title}`, "error"));
+    }
+  };
+};
+
+export const likeBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogService.edit(blog.id, {
+        ...blog,
+        likes: blog.likes + 1,
+      });
+      dispatch({
+        type: "LIKE_BLOG",
+        data: updatedBlog,
+      });
+      dispatch(showNotification(` ${blog.title} has been liked`, "success"));
+    } catch (error) {
+      dispatch(showNotification(`cannot like blog ${blog.title}`, "error"));
     }
   };
 };

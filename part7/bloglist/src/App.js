@@ -6,7 +6,7 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import { fetchBlogs, addBlog, deleteBlog } from "./actions/blogActions";
+import { fetchBlogs, addBlog, deleteBlog, likeBlog } from "./actions/blogActions";
 import { showNotification } from "./reducers/notificationReducer";
 
 const App = () => {
@@ -36,17 +36,8 @@ const App = () => {
     dispatch(addBlog(newBlog));
   };
 
-  const handleEditBlog = async (id) => {
-    try {
-      const blogsClone = [...blogs];
-      const oldBlog = blogsClone.find((obj) => obj.id === id);
-      oldBlog.likes += 1;
-      // const blog = await blogService.edit(id, oldBlog);
-      // setBlogs(blogsClone);
-      // handleNotifications(`${blog.title} has been liked`, "success");
-    } catch (error) {
-      // handleNotifications(error.message, "error");
-    }
+  const handleEditBlog = (blog) => {
+    dispatch(likeBlog(blog))
   };
   const handleDeleteBlog = (blog) => {
     dispatch(deleteBlog(blog));
