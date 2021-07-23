@@ -18,12 +18,27 @@ const notificationReducer = (
   }
 };
 
+export const hideNotification = () => {
+  console.log("called");
+  return async (dispatch) => {
+    setTimeout(() => {
+      dispatch({
+        type: "HIDE_NOTIFICATION",
+      });
+    }, 2000);
+  };
+};
+
 export const showNotification = (message, status) => {
   return async (dispatch) => {
     dispatch({
       type: "SHOW_NOTIFICATION",
-      data: { message, status },
+      data: {
+        message,
+        status,
+      },
     });
+
     setTimeout(() => {
       dispatch({
         type: "HIDE_NOTIFICATION",

@@ -6,7 +6,7 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import { fetchBlogs, addBlog } from "./reducers/blogsReducers";
+import { fetchBlogs, addBlog } from "./actions/blogActions";
 import { showNotification } from "./reducers/notificationReducer";
 
 const App = () => {
