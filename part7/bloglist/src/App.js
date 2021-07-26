@@ -5,9 +5,10 @@ import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import UserList from "./components/UserList";
+import User from "./components/User";
 import { loginUser, initUser, logoutUser } from "./reducers/authReducer";
 import { fetchUsers } from "./reducers/userReducer";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import {
   fetchBlogs,
   addBlog,
@@ -20,6 +21,7 @@ const App = () => {
   const blogs = useSelector((state) => state.blogs);
   const notifications = useSelector((state) => state.notifications);
   const user = useSelector((state) => state.auth);
+  const { users } = useSelector((state) => state.users);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +32,11 @@ const App = () => {
     dispatch(fetchBlogs());
     dispatch(fetchUsers());
   }, []);
+
+  const userMatch = useRouteMatch("/users/:id");
+  const foundUser = userMatch
+    ? users.find((user) => user.id === userMatch.params.id)
+    : null;
 
   const handleAddToBlog = (newBlog) => {
     dispatch(addBlog(newBlog));
@@ -115,8 +122,11 @@ const App = () => {
                   </div>
                 ))}
             </Route>
-            <Route path="/users">
+            <Route exact path="/users">
               <UserList />
+            </Route>
+            <Route exact path="/users/:id">
+              <User user={foundUser} />
             </Route>
           </Switch>
         </div>
