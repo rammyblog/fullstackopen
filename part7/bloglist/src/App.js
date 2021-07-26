@@ -4,32 +4,30 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import { fetchBlogs, addBlog, deleteBlog, likeBlog } from "./actions/blogActions";
-import { showNotification } from "./reducers/notificationReducer";
+import { loginUser, initUser } from "./reducers/authReducer";
+import {
+  fetchBlogs,
+  addBlog,
+  deleteBlog,
+  likeBlog,
+} from "./actions/blogActions";
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([]);
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
   const notifications = useSelector((state) => state.notifications);
+  const user = useSelector((state) => state.auth);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
   useEffect(() => {
-    dispatch(fetchBlogs());
+    dispatch(initUser());
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
+    dispatch(fetchBlogs());
   }, []);
 
   const handleAddToBlog = (newBlog) => {
@@ -37,7 +35,7 @@ const App = () => {
   };
 
   const handleEditBlog = (blog) => {
-    dispatch(likeBlog(blog))
+    dispatch(likeBlog(blog));
   };
   const handleDeleteBlog = (blog) => {
     dispatch(deleteBlog(blog));
@@ -45,21 +43,9 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      blogService.setToken(user.token);
-      window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
-
-      setUser(user);
-      setUsername("");
-      setPassword("");
-    } catch (exception) {
-      dispatch(showNotification("wrong credentials", "error"));
-    }
+    dispatch(loginUser(username, password));
+    setUsername("");
+    setPassword("");
   };
   const loginForm = () => (
     <form onSubmit={handleLogin}>
