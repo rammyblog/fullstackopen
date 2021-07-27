@@ -6,7 +6,9 @@ import Togglable from "./components/Togglable";
 import BlogForm from "./components/BlogForm";
 import UserList from "./components/UserList";
 import User from "./components/User";
-import { loginUser, initUser, logoutUser } from "./reducers/authReducer";
+import BlogDetail from "./components/BlogDetail";
+
+import { loginUser, initUser } from "./reducers/authReducer";
 import { fetchUsers } from "./reducers/userReducer";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import {
@@ -15,6 +17,7 @@ import {
   deleteBlog,
   likeBlog,
 } from "./actions/blogActions";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -36,6 +39,11 @@ const App = () => {
   const userMatch = useRouteMatch("/users/:id");
   const foundUser = userMatch
     ? users.find((user) => user.id === userMatch.params.id)
+    : null;
+
+  const blogMatch = useRouteMatch("/blogs/:id");
+  const foundBlog = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
     : null;
 
   const handleAddToBlog = (newBlog) => {
@@ -98,9 +106,8 @@ const App = () => {
         loginForm()
       ) : (
         <div>
-          <h2>blogs</h2>
-          <p>{user.name} logged in</p>
-          <button onClick={() => dispatch(logoutUser())}>log out</button>
+          <Navbar />
+          <h2>Blog App</h2>
           <Switch>
             <Route exact path="/">
               <Togglable
@@ -127,6 +134,9 @@ const App = () => {
             </Route>
             <Route exact path="/users/:id">
               <User user={foundUser} />
+            </Route>
+            <Route exact path="/blogs/:id">
+              <BlogDetail blog={foundBlog} handleEditBlog={handleEditBlog} />
             </Route>
           </Switch>
         </div>
