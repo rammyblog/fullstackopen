@@ -16,6 +16,6 @@ commentSchema.set("toJSON", {
   },
 });
 
-const Blog = mongoose.model("Blog", commentSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
-module.exports = Blog;
+module.exports = Comment;

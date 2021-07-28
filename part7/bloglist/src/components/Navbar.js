@@ -9,7 +9,7 @@ const Navbar = () => {
   const user = useSelector((state) => state.auth);
 
   return (
-    <ul>
+    <ul className="nav">
       <li>
         <Link>blogs</Link>
       </li>

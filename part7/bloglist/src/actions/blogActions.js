@@ -62,3 +62,20 @@ export const likeBlog = (blog) => {
     }
   };
 };
+
+export const addComment = (id, text) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogService.addComment(id, text);
+      dispatch({
+        type: "ADD_COMMENT",
+        data: updatedBlog,
+      });
+      dispatch(
+        showNotification(`Comment has been added successfully`, "success")
+      );
+    } catch (error) {
+      dispatch(showNotification(`Could not add comment`, "error"));
+    }
+  };
+};

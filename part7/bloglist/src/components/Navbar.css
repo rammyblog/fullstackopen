@@ -1,7 +1,7 @@
-ul {
+.nav {
   background-color: #aca1a1;
 }
-li {
+.nav li {
   display: inline;
   margin: 4px;
 }

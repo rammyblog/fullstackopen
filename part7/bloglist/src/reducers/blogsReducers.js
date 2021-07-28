@@ -15,6 +15,9 @@ const blogReducer = (state = [], action) => {
         likes: updatedBlog.likes + 1,
       };
       return state.map((blog) => (blog.id !== id ? blog : changedBlog));
+
+    case "ADD_COMMENT":
+      return state.map((blog) => (blog.id !== id ? blog : action.data));
     default:
       return state;
   }
