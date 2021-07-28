@@ -75,6 +75,7 @@ export const addComment = (id, text) => {
         showNotification(`Comment has been added successfully`, "success")
       );
     } catch (error) {
+      console.error(error);
       dispatch(showNotification(`Could not add comment`, "error"));
     }
   };
